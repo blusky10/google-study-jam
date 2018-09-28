@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +50,8 @@ public class RegisterController {
 
         modelAndView.setViewName("register");
 
+        LOGGER.debug("Register Info " + register.toString());
+
         ResponseObj responseObj = sendTry(register);
 
         restService.confirmAll(responseObj.getUri());
@@ -60,7 +63,8 @@ public class RegisterController {
         final String requestURL = "http://localhost:8081/api/v1/mail";
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("type", "SIGNUP");
-        requestBody.put("email", user.getEmail());
+        requestBody.put("receivers", Arrays.asList(user.getEmail()));
+        requestBody.put("sender", "blusky10@naver.com");
 
         return restService.doTry(requestURL, requestBody);
     }
