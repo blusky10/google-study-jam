@@ -1,7 +1,16 @@
 package com.peanutbutter.mail.model;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
 
-public class ResponseObj implements Serializable {
-    private String url;
+import java.io.Serializable;
+import java.net.URI;
+import java.sql.Timestamp;
+
+@Getter
+@Setter
+public class ResponseObj implements Serializable{
+    private URI uri;
+    private Timestamp expires;
 }
+
