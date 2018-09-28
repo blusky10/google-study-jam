@@ -18,8 +18,11 @@ public class MailContent {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "body")
-    private String body;
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "contents")
+    private String contents;
 
     @Column(name = "sender")
     private String sender;
