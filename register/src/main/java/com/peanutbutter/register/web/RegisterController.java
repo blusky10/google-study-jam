@@ -1,7 +1,9 @@
 package com.peanutbutter.register.web;
 
+import com.peanutbutter.register.model.ResponseObj;
 import com.peanutbutter.register.model.User;
-import com.peanutbutter.register.repository.UserRepository;
+import com.peanutbutter.register.service.RegisterService;
+import com.peanutbutter.register.service.RestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class RegisterController {
@@ -21,7 +24,10 @@ public class RegisterController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegisterController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private RegisterService registerService;
+
+    @Autowired
+    private RestService restService;
 
     @RequestMapping(value="/register", method = RequestMethod.GET)
     public ModelAndView showRegistrationPage(ModelAndView modelAndView, User user){
@@ -33,33 +39,33 @@ public class RegisterController {
     // Process form input data
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView processRegistrationForm(ModelAndView modelAndView, @Valid User user, BindingResult bindingResult, HttpServletRequest request) {
+        User register = registerService.register(user);
 
-        // Lookup user in database by e-mail
-        Optional<User> userExists = userRepository.findByEmail(user.getEmail());
-
-        LOGGER.debug("[ACCOUNT_LOGGER] userExists : " + userExists);
-
-        if (userExists.isPresent()) {
+        if (register == null){
             modelAndView.addObject("alreadyRegisteredMessage", "Oops!  There is already a user registered with the email provided.");
-            modelAndView.setViewName("register");
-            bindingResult.reject("email");
+        }else{
+            modelAndView.addObject("confirmationMessage", "A confirmation e-mail has been sent to " + register.getEmail());
         }
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("register");
-        } else { // new user so we create user and send confirmation e-mail
+        modelAndView.setViewName("register");
 
-            // Disable user until they click on confirmation link in email
-            user.setEnabled(false);
+        ResponseObj responseObj = sendTry(register);
 
-            userRepository.save(user);
-
-            modelAndView.addObject("confirmationMessage", "A confirmation e-mail has been sent to " + user.getEmail());
-            modelAndView.setViewName("register");
-        }
+        restService.confirmAll(responseObj.getUri());
 
         return modelAndView;
     }
 
-    private r
+    private ResponseObj sendTry(User user){
+        final String requestURL = "http://localhost:8081/api/v1/mail";
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("type", "SIGNUP");
+        requestBody.put("email", user.getEmail());
+
+        return restService.doTry(requestURL, requestBody);
+    }
+
+//    private ResponseObj sendConfirm(){
+//
+//    }
 }

@@ -3,8 +3,10 @@ package com.peanutbutter.register.service;
 import com.peanutbutter.register.model.ResponseObj;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.Map;
 
 @Service
@@ -22,5 +24,17 @@ public class RestServiceImpl implements RestService{
                     requestURL, response.getStatusCode().name()));
         }
         return response.getBody();
+    }
+
+    @Override
+    public void confirmAll(final URI... uris) {
+        for (URI uri : uris) {
+            try {
+                restTemplate.put(uri, null);
+            } catch (RestClientException e) {
+//                cancelAll(uris);
+                throw new RuntimeException(String.format("Confirm Error[URI : %s]", uri.toString()), e);
+            }
+        }
     }
 }
