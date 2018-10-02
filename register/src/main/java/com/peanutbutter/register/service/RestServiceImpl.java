@@ -1,40 +1,74 @@
 package com.peanutbutter.register.service;
 
-import com.peanutbutter.register.model.ResponseObj;
-import org.springframework.http.*;
+import com.peanutbutter.register.dto.RequestObj;
+import com.peanutbutter.register.dto.ResponseObj;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RestServiceImpl implements RestService{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestServiceImpl.class);
+
     private RestTemplate restTemplate = new RestTemplate();
 
-    @Override
-    public ResponseObj doTry(String requestURL, Map<String, Object> requestBody) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<ResponseObj> response = restTemplate.postForEntity(requestURL, new HttpEntity(requestBody, headers), ResponseObj.class);
+    @Autowired
+    private RetryTemplate retryTemplate;
 
-        if(response.getStatusCode() != HttpStatus.CREATED) {
-            throw new RuntimeException(String.format("TRY Error[URI : %s][HTTP Status : %s]",
-                    requestURL, response.getStatusCode().name()));
-        }
-        return response.getBody();
+    @Override
+    public List<ResponseObj> doTry(List<RequestObj> requestObjList) {
+        List<ResponseObj> requestObjs = new ArrayList<>();
+
+        requestObjList.forEach(requestObj -> {
+                try {
+                    ResponseObj responseObj = retryTemplate.execute((RetryCallback<ResponseObj, RestClientException>) context -> {
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.setContentType(MediaType.APPLICATION_JSON);
+
+                        ResponseEntity<ResponseObj> response = restTemplate.postForEntity(requestObj.getUrl(),
+                                new HttpEntity(requestObj.getRequestBody(), headers), ResponseObj.class);
+
+                        LOGGER.info(String.format("ResponseObj URI :%s", response.getBody().getUri()));
+
+                        return response.getBody();
+                    });
+
+                    requestObjs.add(responseObj);
+                } catch (RestClientException e) {
+//                    cancelAll(participantLinks);
+                    throw new RuntimeException(String.format("Try Error[URI : %s]", requestObj.getUrl()), e);
+                }
+            }
+        );
+
+        return requestObjs;
     }
 
     @Override
-    public void confirmAll(final URI... uris) {
-        for (URI uri : uris) {
+    public void confirmAll(List<ResponseObj> responseObjList) {
+        responseObjList.forEach(responseObj -> {
             try {
-                restTemplate.put(uri, null);
+                retryTemplate.execute((RetryCallback<Void, RestClientException>) context -> {
+                    restTemplate.put(responseObj.getUri(), null);
+                    return null;
+                });
+
             } catch (RestClientException e) {
-//                cancelAll(uris);
-                throw new RuntimeException(String.format("Confirm Error[URI : %s]", uri.toString()), e);
+                LOGGER.error(String.format("Confirm Error[URI : %s]", responseObj.getUri().toString()), e);
             }
-        }
+        });
     }
 }

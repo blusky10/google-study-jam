@@ -1,13 +1,13 @@
 package com.peanutbutter.register.service;
 
-import com.peanutbutter.register.model.ResponseObj;
+import com.peanutbutter.register.dto.RequestObj;
+import com.peanutbutter.register.dto.ResponseObj;
 
-import java.net.URI;
-import java.util.Map;
+import java.util.List;
 
 public interface RestService {
 
-    ResponseObj doTry(final String requestURL, final Map<String, Object> requestBody);
+    List<ResponseObj> doTry(List<RequestObj> requestObjList);
 
-    public void confirmAll(final URI... uris);
+    void confirmAll(List<ResponseObj> responseObjList);
 }

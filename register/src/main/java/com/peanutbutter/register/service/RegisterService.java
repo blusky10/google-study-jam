@@ -1,6 +1,6 @@
 package com.peanutbutter.register.service;
 
-import com.peanutbutter.register.model.User;
+import com.peanutbutter.register.entity.User;
 
 public interface RegisterService {
 
