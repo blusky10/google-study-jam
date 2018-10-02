@@ -1,10 +1,6 @@
 package com.peanutbutter.register.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,9 +8,6 @@ import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 
 @Entity
-@Data
-@NoArgsConstructor
-@ToString
 public class User {
 
     @Id
@@ -45,4 +38,59 @@ public class User {
     @CreationTimestamp
     private Timestamp createTimeAt;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Timestamp getCreateTimeAt() {
+        return createTimeAt;
+    }
+
+    public void setCreateTimeAt(Timestamp createTimeAt) {
+        this.createTimeAt = createTimeAt;
+    }
 }

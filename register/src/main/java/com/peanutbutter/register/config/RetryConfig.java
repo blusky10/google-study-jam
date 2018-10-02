@@ -14,7 +14,7 @@ public class RetryConfig {
         RetryTemplate retryTemplate = new RetryTemplate();
 
         FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
-        fixedBackOffPolicy.setBackOffPeriod(2000l);
+        fixedBackOffPolicy.setBackOffPeriod(2000L);
         retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
 
         SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy();
