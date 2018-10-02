@@ -1,6 +1,6 @@
 package com.peanutbutter.register.repository;
 
-import com.peanutbutter.register.model.User;
+import com.peanutbutter.register.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
