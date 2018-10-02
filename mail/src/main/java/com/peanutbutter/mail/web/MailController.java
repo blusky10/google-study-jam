@@ -1,39 +1,40 @@
 package com.peanutbutter.mail.web;
 
 import com.peanutbutter.mail.model.MailContent;
-import com.peanutbutter.mail.model.ResponseObj;
-import com.peanutbutter.mail.repository.MailRepository;
+import com.peanutbutter.mail.service.MailService;
+import lombok.ToString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.sql.Timestamp;
-import java.util.Date;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/mail")
+@ToString
 public class MailController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(MailContent.class);
+
     @Autowired
-    private MailRepository mailRepository;
+    private MailService mailService;
 
     @PostMapping
     public ResponseEntity<ResponseObj> trySendEmail(@RequestBody MailContent mailContent){
-        MailContent savedMailContent = mailRepository.save(mailContent);
-
-        ResponseObj responseObj = buildResponseURI(savedMailContent.getId(), savedMailContent.getCreateTimeAt());
-
-        return new ResponseEntity<>(responseObj, HttpStatus.CREATED);
+        return mailService.reserveMail(mailContent);
     }
 
-    private ResponseObj buildResponseURI(final Long id, final Timestamp created) {
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
-        return new ResponseObj(location, created);
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> confirmSendEmail(@PathVariable Long id) {
+        try {
+            stockService.confirmStock(id);
+        } catch(IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
