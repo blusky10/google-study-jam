@@ -1,9 +1,7 @@
 package com.peanutbutter.register.web;
 
-import com.peanutbutter.register.model.ResponseObj;
-import com.peanutbutter.register.model.User;
+import com.peanutbutter.register.entity.User;
 import com.peanutbutter.register.service.RegisterService;
-import com.peanutbutter.register.service.RestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class RegisterController {
@@ -27,8 +22,6 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @Autowired
-    private RestService restService;
 
     @RequestMapping(value="/register", method = RequestMethod.GET)
     public ModelAndView showRegistrationPage(ModelAndView modelAndView, User user){
@@ -52,24 +45,9 @@ public class RegisterController {
 
         LOGGER.debug("Register Info " + register.toString());
 
-        ResponseObj responseObj = sendTry(register);
-
-        restService.confirmAll(responseObj.getUri());
-
         return modelAndView;
     }
 
-    private ResponseObj sendTry(User user){
-        final String requestURL = "http://localhost:8081/api/v1/mail";
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("type", "SIGNUP");
-        requestBody.put("receivers", Arrays.asList(user.getEmail()));
-        requestBody.put("sender", "blusky10@naver.com");
 
-        return restService.doTry(requestURL, requestBody);
-    }
 
-//    private ResponseObj sendConfirm(){
-//
-//    }
 }
