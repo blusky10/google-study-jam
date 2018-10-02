@@ -1,6 +1,7 @@
 package com.peanutbutter.mail.web;
 
-import com.peanutbutter.mail.model.MailContent;
+import com.peanutbutter.mail.dto.MailContent;
+import com.peanutbutter.mail.dto.ResponseObj;
 import com.peanutbutter.mail.service.MailService;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @ToString
 public class MailController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MailContent.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MailController.class);
 
     @Autowired
     private MailService mailService;
@@ -25,12 +26,10 @@ public class MailController {
         return mailService.reserveMail(mailContent);
     }
 
-
-
     @PutMapping("/{id}")
     public ResponseEntity<Void> confirmSendEmail(@PathVariable Long id) {
         try {
-            stockService.confirmStock(id);
+            mailService.confirmMail(id);
         } catch(IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

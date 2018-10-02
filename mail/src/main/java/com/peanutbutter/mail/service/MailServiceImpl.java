@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -47,21 +48,20 @@ public class MailServiceImpl implements MailService {
     @Override
     public void confirmMail(Long id) {
 
-        ReservedMail reservedMail = mailRepository.getOne(id);
+        Optional<ReservedMail> optionalReservedMail = mailRepository.findById(id);
 
-        if(reservedMail == null) {
-            throw new IllegalArgumentException("Not found");
-        }
+        optionalReservedMail.orElseThrow(() -> new IllegalArgumentException("Not found"));
 
-        reservedMail.validate();
+        optionalReservedMail.ifPresent( reservedMail -> {
+            reservedMail.validate();
 
-        // ReservedStock 상태를 Confirm 으로 변경
-        reservedMail.setStatus(Status.CONFIRMED);
-        mailRepository.save(reservedMail);
+            // ReservedStock 상태를 Confirm 으로 변경
+            reservedMail.setStatus(Status.CONFIRMED);
+            mailRepository.save(reservedMail);
 
 //        // Messaging Queue 로 전송
 //        stockAdjustmentChannelAdapter.publish(reservedStock.getResources());
-        LOGGER.info("Confirm Mail :" + id);
-
+            LOGGER.info("Confirm Mail :" + id);
+        });
     }
 }
