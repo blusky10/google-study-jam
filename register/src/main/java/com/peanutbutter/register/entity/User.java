@@ -1,4 +1,4 @@
-package com.peanutbutter.register.model;
+package com.peanutbutter.register.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
