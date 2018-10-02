@@ -52,7 +52,7 @@ public class RegisterServiceImpl implements RegisterService {
         final String requestURL = "http://localhost:8081/api/v1/mail";
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("type", "SIGNUP");
-        requestBody.put("receivers", Arrays.asList(user.getEmail()));
+        requestBody.put("receiver", user.getEmail());
         requestBody.put("sender", "blusky10@naver.com");
 
         return new RequestObj(requestURL, requestBody);
