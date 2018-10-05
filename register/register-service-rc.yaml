@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: register-service-node
-        image: blusky10/my-app
+        image: blusky10/register-service
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
