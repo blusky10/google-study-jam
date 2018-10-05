@@ -34,6 +34,9 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "token")
+    private String token;
+
     @Column(name = "create_time_at")
     @CreationTimestamp
     private Timestamp createTimeAt;
@@ -92,5 +95,13 @@ public class User {
 
     public void setCreateTimeAt(Timestamp createTimeAt) {
         this.createTimeAt = createTimeAt;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
