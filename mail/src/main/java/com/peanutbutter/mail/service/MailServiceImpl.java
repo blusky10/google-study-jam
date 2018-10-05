@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +28,9 @@ public class MailServiceImpl implements MailService {
 
     @Autowired
     private MailRepository mailRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Override
     public ResponseEntity<ResponseObj> reserveMail(MailContent mailContent) {
@@ -58,10 +63,21 @@ public class MailServiceImpl implements MailService {
             // ReservedStock 상태를 Confirm 으로 변경
             reservedMail.setStatus(Status.CONFIRMED);
             mailRepository.save(reservedMail);
-
-//        // Messaging Queue 로 전송
-//        stockAdjustmentChannelAdapter.publish(reservedStock.getResources());
+            sendMail(reservedMail);
             LOGGER.info("Confirm Mail :" + id);
         });
+    }
+
+    private void sendMail(ReservedMail reservedMail){
+
+        SimpleMailMessage registrationEmail = new SimpleMailMessage();
+        registrationEmail.setTo(reservedMail.getReceiver());
+        registrationEmail.setSubject(reservedMail.getSubject());
+        registrationEmail.setText(reservedMail.getContents());
+        registrationEmail.setFrom("noreply@domain.com");
+
+        LOGGER.info("Send Mail " + registrationEmail.toString());
+
+        mailSender.send(registrationEmail);
     }
 }

@@ -1,13 +1,13 @@
 package com.peanutbutter.mail.dto;
 
-import java.util.List;
-
 public class MailContent {
 
     private String type;
-    private String contents;
-    private String sender;
     private String receiver;
+    private String sender;
+    private String contents;
+    private String subject;
+    private String content;
 
     public String getType() {
         return type;
@@ -17,12 +17,12 @@ public class MailContent {
         this.type = type;
     }
 
-    public String getContents() {
-        return contents;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getSender() {
@@ -33,11 +33,27 @@ public class MailContent {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getContents() {
+        return contents;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

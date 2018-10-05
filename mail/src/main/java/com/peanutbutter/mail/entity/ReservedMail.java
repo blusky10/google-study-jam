@@ -33,6 +33,9 @@ public class ReservedMail {
     @Column(name = "receiver")
     private String receiver;
 
+    @Column(name = "subject")
+    private String subject;
+
     @Column(name = "create_time_at")
     private LocalDateTime createTimeAt;
 
@@ -47,6 +50,7 @@ public class ReservedMail {
         this.contents = mailContent.getContents();
         this.sender = mailContent.getSender();
         this.receiver = mailContent.getReceiver();
+        this.subject = mailContent.getSubject();
         this.createTimeAt = LocalDateTime.now();
         this.expires = createTimeAt.plus(TIMEOUT, ChronoUnit.SECONDS);
     }
@@ -130,5 +134,13 @@ public class ReservedMail {
 
     public void setExpires(LocalDateTime expires) {
         this.expires = expires;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }
