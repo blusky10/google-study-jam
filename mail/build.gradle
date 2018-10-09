@@ -10,6 +10,10 @@ buildscript {
 	}
 }
 
+plugins {
+	id 'com.google.cloud.tools.jib' version '0.9.11'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -29,7 +33,26 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-mail')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
+
+	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('com.h2database:h2')
-	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+jib {
+	from{
+		image = 'openjdk:8'
+	}
+	to {
+		image = IMAGE
+		auth {
+			username = USERNAME
+			password = PASSWORD
+		}
+		tags = ['mail-service']
+	}
+	container{
+		mainClass = 'com.peanutbutter.mail.MailApplication'
+		ports = ['8081']
+	}
 }
