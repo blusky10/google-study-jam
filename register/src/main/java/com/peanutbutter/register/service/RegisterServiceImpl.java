@@ -52,6 +52,20 @@ public class RegisterServiceImpl implements RegisterService {
         return registerUser;
     }
 
+    @Override
+    public User confirm(User user, String password) {
+//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+//        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(password);
+        user.setEnabled(true);
+
+        // Save user
+        User registerUser = userRepository.save(user);
+
+        return registerUser;
+    }
+
 
     private RequestObj trySendMail(User user)  {
 
@@ -77,4 +91,6 @@ public class RegisterServiceImpl implements RegisterService {
 
         return new RequestObj(requestURL, requestBody);
     }
+
+
 }
