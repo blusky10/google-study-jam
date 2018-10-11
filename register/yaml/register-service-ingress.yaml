@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: register-service-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /register
+        backend:
+          serviceName: register-service-service
+          servicePort: 8080
