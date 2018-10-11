@@ -4,6 +4,7 @@ import com.peanutbutter.mail.dto.MailContent;
 import com.peanutbutter.mail.dto.ResponseObj;
 import com.peanutbutter.mail.entity.ReservedMail;
 import com.peanutbutter.mail.enums.Status;
+import com.peanutbutter.mail.kafka.KafkaServie;
 import com.peanutbutter.mail.repository.MailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,9 @@ public class MailServiceImpl implements MailService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private KafkaServie kafkaServie;
 
     @Override
     public ResponseEntity<ResponseObj> reserveMail(MailContent mailContent) {
@@ -63,7 +67,9 @@ public class MailServiceImpl implements MailService {
             // ReservedStock 상태를 Confirm 으로 변경
             reservedMail.setStatus(Status.CONFIRMED);
             mailRepository.save(reservedMail);
-            sendMail(reservedMail);
+
+            kafkaServie.publish(reservedMail.toString());
+//            sendMail(reservedMail);
             LOGGER.info("Confirm Mail :" + id);
         });
     }
@@ -74,7 +80,8 @@ public class MailServiceImpl implements MailService {
         registrationEmail.setTo(reservedMail.getReceiver());
         registrationEmail.setSubject(reservedMail.getSubject());
         registrationEmail.setText(reservedMail.getContents());
-        registrationEmail.setFrom("noreply@domain.com");
+//        registrationEmail.setFrom("noreply@domain.com");
+        registrationEmail.setFrom("sanghyun0910.kim@samsung.com");
 
         LOGGER.info("Send Mail " + registrationEmail.toString());
 
