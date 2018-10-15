@@ -1,9 +1,11 @@
 package com.peanutbutter.mail.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peanutbutter.mail.dto.MailContent;
 import com.peanutbutter.mail.enums.Status;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ReservedMail {
         this.receiver = mailContent.getReceiver();
         this.subject = mailContent.getSubject();
         this.createTimeAt = LocalDateTime.now();
-        this.expires = createTimeAt.plus(TIMEOUT, ChronoUnit.SECONDS);
+        this.expires = createTimeAt.plus(TIMEOUT, ChronoUnit.MINUTES);
     }
 
     public void validate() {
@@ -142,5 +144,26 @@ public class ReservedMail {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+
+    public static ReservedMail deserializeJSON(final String json) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, ReservedMail.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ReservedMail{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", status=" + status +
+                ", contents='" + contents + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", subject='" + subject + '\'' +
+                ", createTimeAt=" + createTimeAt +
+                ", expires=" + expires +
+                '}';
     }
 }
