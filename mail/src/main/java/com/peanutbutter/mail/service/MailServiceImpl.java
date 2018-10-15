@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -64,24 +63,26 @@ public class MailServiceImpl implements MailService {
         optionalReservedMail.ifPresent( reservedMail -> {
             reservedMail.validate();
 
-            // ReservedStock 상태를 Confirm 으로 변경
             reservedMail.setStatus(Status.CONFIRMED);
+
+            LOGGER.info("Confirm Mail :" + id);
+
             mailRepository.save(reservedMail);
 
-            kafkaServie.publish(reservedMail.toString());
-//            sendMail(reservedMail);
-            LOGGER.info("Confirm Mail :" + id);
+            LOGGER.info("Publish to Kafka Confirmed Mail :" + reservedMail.toString());
+            kafkaServie.publish(reservedMail);
+
         });
     }
 
-    private void sendMail(ReservedMail reservedMail){
+    @Override
+    public void sendMail(ReservedMail reservedMail){
 
         SimpleMailMessage registrationEmail = new SimpleMailMessage();
         registrationEmail.setTo(reservedMail.getReceiver());
         registrationEmail.setSubject(reservedMail.getSubject());
         registrationEmail.setText(reservedMail.getContents());
-//        registrationEmail.setFrom("noreply@domain.com");
-        registrationEmail.setFrom("sanghyun0910.kim@samsung.com");
+        registrationEmail.setFrom("noreply@domain.com");
 
         LOGGER.info("Send Mail " + registrationEmail.toString());
 
