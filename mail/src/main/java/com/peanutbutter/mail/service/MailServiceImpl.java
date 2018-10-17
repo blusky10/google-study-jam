@@ -43,9 +43,16 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public ResponseEntity<TryResponse> saveReservedResource(TryRequest tryRequest) {
+
+        LOGGER.debug("TryRequest : " + tryRequest.toString());
+
         ReservedResource reservedResource = new ReservedResource(tryRequest);
         reservedResourceRepository.save(reservedResource);
+
+        LOGGER.debug("reservedResource : " + reservedResource.toString());
+
         TryResponse tryResponse = buildResponseURI(reservedResource.getId(), reservedResource.getCreatedTimeAt());
+
         return new ResponseEntity<>(tryResponse, HttpStatus.CREATED);
     }
 

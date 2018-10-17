@@ -6,7 +6,6 @@ import com.peanutbutter.mail.dto.TryRequest;
 import com.peanutbutter.mail.enums.Status;
 
 import javax.persistence.*;
-import javax.xml.ws.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
