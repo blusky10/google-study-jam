@@ -52,7 +52,7 @@ public class RegisterController {
 
         modelAndView.setViewName("register");
 
-        LOGGER.debug("Register Info " + register.toString());
+        LOGGER.debug("[Register-Service] Register Info " + register.toString());
 
         return modelAndView;
     }

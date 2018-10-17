@@ -33,7 +33,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         Optional<User> userExists = userRepository.findByEmail(user.getEmail());
 
-        LOGGER.debug("[ACCOUNT_LOGGER] userExists : " + userExists);
+        LOGGER.debug("[Register-Service] userExists : " + userExists);
 
         if (userExists.isPresent()) {
             return null;
