@@ -39,12 +39,12 @@ public class KafkaServieImpl implements KafkaServie {
 
     @KafkaListener(topics = TOPIC)
     public void subscribe(String message, Acknowledgment ack) {
-        LOGGER.info(String.format("Message Received : %s", message));
+        LOGGER.info("[Mail-Service] Message Received : " + message);
         try {
 
             SendMail sendMail = ReservedResource.deserializeJSON(message);
 
-            LOGGER.info(String.format("Send Confirmed Mail : %s", sendMail.toString()));
+            LOGGER.info("[Mail-Service] Send Confirmed Mail : " + sendMail.toString());
             mailService.sendMail(sendMail);
             ack.acknowledge();
 

@@ -19,6 +19,7 @@ public class ReservedResource {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 2000)
     private String resources;
 
     @Enumerated(EnumType.STRING)

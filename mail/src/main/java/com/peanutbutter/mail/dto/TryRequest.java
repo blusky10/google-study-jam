@@ -8,7 +8,17 @@ import java.util.Map;
 
 public class TryRequest {
 
+    private String url;
+
     private Map<String, String> body = new HashMap<>();
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public Map<String, String> getBody() {
         return body;
@@ -20,7 +30,7 @@ public class TryRequest {
 
     public String serializeJSON() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(this);
+        return objectMapper.writeValueAsString(this.body);
     }
 
     @Override

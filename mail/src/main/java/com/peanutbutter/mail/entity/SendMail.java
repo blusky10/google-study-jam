@@ -73,4 +73,17 @@ public class SendMail {
     public void setCreateTimeAt(LocalDateTime createTimeAt) {
         this.createTimeAt = createTimeAt;
     }
+
+    @Override
+    public String toString() {
+        return "SendMail{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", contents='" + contents + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", subject='" + subject + '\'' +
+                ", createTimeAt=" + createTimeAt +
+                '}';
+    }
 }

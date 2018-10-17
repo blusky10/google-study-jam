@@ -44,12 +44,12 @@ public class MailServiceImpl implements MailService {
     @Override
     public ResponseEntity<TryResponse> saveReservedResource(TryRequest tryRequest) {
 
-        LOGGER.debug("TryRequest : " + tryRequest.toString());
+        LOGGER.debug("[Mail-Service] TryRequest : " + tryRequest.toString());
 
         ReservedResource reservedResource = new ReservedResource(tryRequest);
         reservedResourceRepository.save(reservedResource);
 
-        LOGGER.debug("reservedResource : " + reservedResource.toString());
+        LOGGER.debug("[Mail-Service] reservedResource : " + reservedResource.toString());
 
         TryResponse tryResponse = buildResponseURI(reservedResource.getId(), reservedResource.getCreatedTimeAt());
 
@@ -108,11 +108,11 @@ public class MailServiceImpl implements MailService {
             resource.validate();
             resource.setStatus(Status.CONFIRMED);
 
-            LOGGER.info("Confirm Mail :" + id);
+            LOGGER.info("[Mail-Service] Confirm Mail :" + id);
 
             reservedResourceRepository.save(resource);
 
-            LOGGER.info("Publish to Kafka Confirmed Mail :" + resource.toString());
+            LOGGER.info("[Mail-Service] Publish to Kafka Confirmed Mail :" + resource.toString());
 
             kafkaServie.publish(resource.getResources());
         });
@@ -127,9 +127,9 @@ public class MailServiceImpl implements MailService {
         registrationEmail.setText(sendMail.getContents());
         registrationEmail.setFrom("noreply@domain.com");
 
-        LOGGER.info("Send Mail " + registrationEmail.toString());
+        LOGGER.info("[Mail-Service] Send Mail " + registrationEmail.toString());
 
-        mailSender.send(registrationEmail);
+        //mailSender.send(registrationEmail);
 
         mailRepository.save(sendMail);
     }
