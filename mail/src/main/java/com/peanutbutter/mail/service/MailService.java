@@ -1,16 +1,18 @@
 package com.peanutbutter.mail.service;
 
 
-import com.peanutbutter.mail.dto.MailContent;
-import com.peanutbutter.mail.dto.ResponseObj;
-import com.peanutbutter.mail.entity.ReservedMail;
+import com.peanutbutter.mail.dto.TryRequest;
+import com.peanutbutter.mail.dto.TryResponse;
+import com.peanutbutter.mail.entity.SendMail;
 import org.springframework.http.ResponseEntity;
 
 public interface MailService {
 
-    ResponseEntity<ResponseObj> reserveMail(MailContent mailContent);
+//    ResponseEntity<TryResponse> reserveMail(MailContent mailContent);
 
     void confirmMail(Long id);
 
-    void sendMail(ReservedMail reservedMail);
+    void sendMail(SendMail reservedMail);
+
+    ResponseEntity<TryResponse> saveReservedResource(TryRequest request);
 }

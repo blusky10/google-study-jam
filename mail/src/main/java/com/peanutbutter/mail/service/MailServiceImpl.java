@@ -1,11 +1,13 @@
 package com.peanutbutter.mail.service;
 
-import com.peanutbutter.mail.dto.MailContent;
-import com.peanutbutter.mail.dto.ResponseObj;
-import com.peanutbutter.mail.entity.ReservedMail;
+import com.peanutbutter.mail.dto.TryRequest;
+import com.peanutbutter.mail.dto.TryResponse;
+import com.peanutbutter.mail.entity.SendMail;
+import com.peanutbutter.mail.entity.ReservedResource;
 import com.peanutbutter.mail.enums.Status;
 import com.peanutbutter.mail.kafka.KafkaServie;
 import com.peanutbutter.mail.repository.MailRepository;
+import com.peanutbutter.mail.repository.ReservedResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,62 +32,99 @@ public class MailServiceImpl implements MailService {
     private MailRepository mailRepository;
 
     @Autowired
+    private ReservedResourceRepository reservedResourceRepository;
+
+    @Autowired
     private JavaMailSender mailSender;
 
     @Autowired
     private KafkaServie kafkaServie;
 
+
     @Override
-    public ResponseEntity<ResponseObj> reserveMail(MailContent mailContent) {
-        LOGGER.debug("ReservedMail : " + mailContent.toString());
-
-        ReservedMail reservedMail = mailRepository.save(new ReservedMail(mailContent));
-
-        LOGGER.debug("responseObj : " + reservedMail.toString());
-
-        ResponseObj responseObj = buildResponseURI(reservedMail.getId(), reservedMail.getCreateTimeAt());
-
-        return new ResponseEntity<>(responseObj, HttpStatus.CREATED);
+    public ResponseEntity<TryResponse> saveReservedResource(TryRequest tryRequest) {
+        ReservedResource reservedResource = new ReservedResource(tryRequest);
+        reservedResourceRepository.save(reservedResource);
+        TryResponse tryResponse = buildResponseURI(reservedResource.getId(), reservedResource.getCreatedTimeAt());
+        return new ResponseEntity<>(tryResponse, HttpStatus.CREATED);
     }
 
-    private ResponseObj buildResponseURI(final Long id, final LocalDateTime created) {
+//    @Override
+//    public ResponseEntity<TryResponse> reserveMail(MailContent mailContent) {
+//        LOGGER.debug("SendMail : " + mailContent.toString());
+//
+//        SendMail reservedMail = mailRepository.save(new SendMail(mailContent));
+//
+//        LOGGER.debug("responseObj : " + reservedMail.toString());
+//
+//        TryResponse responseObj = buildResponseURI(reservedMail.getId(), reservedMail.getCreateTimeAt());
+//
+//        return new ResponseEntity<>(responseObj, HttpStatus.CREATED);
+//    }
+
+    private TryResponse buildResponseURI(final Long id, final LocalDateTime created) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
-        return new ResponseObj(location, created);
+        return new TryResponse(location, created);
     }
+
+//    @Override
+//    public void confirmMail(Long id) {
+//
+//        Optional<SendMail> optionalReservedMail = mailRepository.findById(id);
+//
+//        optionalReservedMail.orElseThrow(() -> new IllegalArgumentException("Not found"));
+//
+//        optionalReservedMail.ifPresent( reservedMail -> {
+//            reservedMail.validate();
+//
+//            reservedMail.setStatus(Status.CONFIRMED);
+//
+//            LOGGER.info("Confirm Mail :" + id);
+//
+//            mailRepository.save(reservedMail);
+//
+//            LOGGER.info("Publish to Kafka Confirmed Mail :" + reservedMail.toString());
+//            kafkaServie.publish(reservedMail);
+//
+//        });
+//    }
+
 
     @Override
     public void confirmMail(Long id) {
 
-        Optional<ReservedMail> optionalReservedMail = mailRepository.findById(id);
+        Optional<ReservedResource> reservedResource = reservedResourceRepository.findById(id);
 
-        optionalReservedMail.orElseThrow(() -> new IllegalArgumentException("Not found"));
+        reservedResource.orElseThrow(() -> new IllegalArgumentException("Not found"));
 
-        optionalReservedMail.ifPresent( reservedMail -> {
-            reservedMail.validate();
-
-            reservedMail.setStatus(Status.CONFIRMED);
+        reservedResource.ifPresent( resource -> {
+            resource.validate();
+            resource.setStatus(Status.CONFIRMED);
 
             LOGGER.info("Confirm Mail :" + id);
 
-            mailRepository.save(reservedMail);
+            reservedResourceRepository.save(resource);
 
-            LOGGER.info("Publish to Kafka Confirmed Mail :" + reservedMail.toString());
-            kafkaServie.publish(reservedMail);
+            LOGGER.info("Publish to Kafka Confirmed Mail :" + resource.toString());
 
+            kafkaServie.publish(resource.getResources());
         });
     }
 
     @Override
-    public void sendMail(ReservedMail reservedMail){
+    public void sendMail(SendMail sendMail){
 
         SimpleMailMessage registrationEmail = new SimpleMailMessage();
-        registrationEmail.setTo(reservedMail.getReceiver());
-        registrationEmail.setSubject(reservedMail.getSubject());
-        registrationEmail.setText(reservedMail.getContents());
+        registrationEmail.setTo(sendMail.getReceiver());
+        registrationEmail.setSubject(sendMail.getSubject());
+        registrationEmail.setText(sendMail.getContents());
         registrationEmail.setFrom("noreply@domain.com");
 
         LOGGER.info("Send Mail " + registrationEmail.toString());
 
         mailSender.send(registrationEmail);
+
+        mailRepository.save(sendMail);
     }
+
 }

@@ -1,6 +1,7 @@
 package com.peanutbutter.mail.kafka;
 
-import com.peanutbutter.mail.entity.ReservedMail;
+import com.peanutbutter.mail.entity.SendMail;
+import com.peanutbutter.mail.entity.ReservedResource;
 import com.peanutbutter.mail.enums.Status;
 import com.peanutbutter.mail.service.MailService;
 import org.slf4j.Logger;
@@ -24,24 +25,29 @@ public class KafkaServieImpl implements KafkaServie {
     private final String TOPIC = "mail-service";
 
     @Autowired
-    private KafkaTemplate<String, ReservedMail> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+//    @Override
+//    public void publish(SendMail reservedMail) {
+//        this.kafkaTemplate.send(TOPIC, reservedMail);
+//    }
 
     @Override
-    public void publish(ReservedMail reservedMail) {
-        this.kafkaTemplate.send(TOPIC, reservedMail);
+    public void publish(String message) {
+        this.kafkaTemplate.send(TOPIC, message);
     }
 
     @KafkaListener(topics = TOPIC)
     public void subscribe(String message, Acknowledgment ack) {
         LOGGER.info(String.format("Message Received : %s", message));
         try {
-            ReservedMail reservedMail = ReservedMail.deserializeJSON(message);
 
-            if (reservedMail.getStatus() == Status.CONFIRMED){
-                LOGGER.info(String.format("Send Confirmed Mail : %s", reservedMail.toString()));
-                mailService.sendMail(reservedMail);
-                ack.acknowledge();
-            }
+            SendMail sendMail = ReservedResource.deserializeJSON(message);
+
+            LOGGER.info(String.format("Send Confirmed Mail : %s", sendMail.toString()));
+            mailService.sendMail(sendMail);
+            ack.acknowledge();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

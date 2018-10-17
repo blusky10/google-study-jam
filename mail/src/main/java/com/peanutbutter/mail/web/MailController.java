@@ -1,7 +1,7 @@
 package com.peanutbutter.mail.web;
 
-import com.peanutbutter.mail.dto.MailContent;
-import com.peanutbutter.mail.dto.ResponseObj;
+import com.peanutbutter.mail.dto.TryRequest;
+import com.peanutbutter.mail.dto.TryResponse;
 import com.peanutbutter.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +19,15 @@ public class MailController {
     @Autowired
     private MailService mailService;
 
+//    @PostMapping
+//    public ResponseEntity<TryResponse> trySendEmail(@RequestBody MailContent mailContent){
+//        return mailService.reserveMail(mailContent);
+//    }
+
+
     @PostMapping
-    public ResponseEntity<ResponseObj> trySendEmail(@RequestBody MailContent mailContent){
-        return mailService.reserveMail(mailContent);
+    public ResponseEntity<TryResponse> trySendEmail(@RequestBody TryRequest tryRequest){
+        return mailService.saveReservedResource(tryRequest);
     }
 
     @PutMapping("/{id}")

@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.net.URI;
 import java.time.LocalDateTime;
 
-
-public class ResponseObj implements Serializable{
+public class TryResponse implements Serializable{
     private URI uri;
     private LocalDateTime expires;
 
-    public ResponseObj(URI uri, LocalDateTime expires) {
+    public TryResponse(URI uri, LocalDateTime expires) {
         this.uri = uri;
         this.expires = expires;
     }
