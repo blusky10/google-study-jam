@@ -81,15 +81,15 @@ public class RegisterServiceImpl implements RegisterService {
         String port = environment.getProperty("server.port");
         String appUrl = "http://" + ip + ":" + port;
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("type", "SIGNUP");
-        requestBody.put("receiver", user.getEmail());
-        requestBody.put("sender", "blusky10@naver.com");
-        requestBody.put("subject", "Registration Confirmation");
-        requestBody.put("contents", "To confirm your e-mail address, please click the link below:\n"
+        Map<String, Object> body = new HashMap<>();
+        body.put("type", "SIGNUP");
+        body.put("receiver", user.getEmail());
+        body.put("sender", "blusky10@naver.com");
+        body.put("subject", "Registration Confirmation");
+        body.put("contents", "To confirm your e-mail address, please click the link below:\n"
                 + appUrl + "/confirm?token=" + user.getToken());
 
-        return new RequestObj(requestURL, requestBody);
+        return new RequestObj(requestURL, body);
     }
 
 

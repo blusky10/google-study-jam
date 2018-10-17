@@ -38,8 +38,10 @@ public class RestServiceImpl implements RestService{
                         HttpHeaders headers = new HttpHeaders();
                         headers.setContentType(MediaType.APPLICATION_JSON);
 
+                        LOGGER.info("requestObj URI : " + requestObj.toString());
+
                         ResponseEntity<ResponseObj> response = restTemplate.postForEntity(requestObj.getUrl(),
-                                new HttpEntity(requestObj.getRequestBody(), headers), ResponseObj.class);
+                                new HttpEntity(requestObj.getBody(), headers), ResponseObj.class);
 
                         LOGGER.info(String.format("ResponseObj URI :%s", response.getBody().getUri()));
 
