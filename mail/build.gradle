@@ -34,25 +34,27 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 
+	compile 'org.springframework.kafka:spring-kafka'
+
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('com.h2database:h2')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
-
-jib {
-	from{
-		image = 'openjdk:8'
-	}
-	to {
-		image = IMAGE
-		auth {
-			username = USERNAME
-			password = PASSWORD
-		}
-		tags = ['mail-service']
-	}
-	container{
-		mainClass = 'com.peanutbutter.mail.MailApplication'
-		ports = ['8081']
-	}
-}
+//
+//jib {
+//	from{
+//		image = 'openjdk:8'
+//	}
+//	to {
+//		image = IMAGE
+//		auth {
+//			username = USERNAME
+//			password = PASSWORD
+//		}
+//		tags = ['mail-service']
+//	}
+//	container{
+//		mainClass = 'com.peanutbutter.mail.MailApplication'
+//		ports = ['8081']
+//	}
+//}

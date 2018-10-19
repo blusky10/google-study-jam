@@ -34,7 +34,8 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.retry:spring-retry')
 
-	compile 'org.springframework.security:spring-security-taglibs:5.0.7.RELEASE'
+	compile('com.nulab-inc:zxcvbn:1.2.4')
+	compile('net.sourceforge.nekohtml:nekohtml:1.9.22')
 
 	compile("org.springframework.boot:spring-boot-devtools")
 
@@ -42,20 +43,20 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
-jib {
-	from{
-		image = 'openjdk:8'
-	}
-	to {
-		image = IMAGE
-		auth {
-			username = USERNAME
-			password = PASSWORD
-		}
-        tags = ['register-service']
-	}
-	container{
-		mainClass = 'com.peanutbutter.register.RegisterApplication'
-		ports = ['8080']
-	}
-}
+//jib {
+//	from{
+//		image = 'openjdk:8'
+//	}
+//	to {
+//		image = IMAGE
+//		auth {
+//			username = USERNAME
+//			password = PASSWORD
+//		}
+//        tags = ['register-service']
+//	}
+//	container{
+//		mainClass = 'com.peanutbutter.register.RegisterApplication'
+//		ports = ['8080']
+//	}
+//}
