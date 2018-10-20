@@ -5,15 +5,14 @@ metadata:
 spec:
   replicas: 2
   selector:
-    app: mail-service-node
+    app: mail-service
   template:
     metadata:
-      name: mail-service-node-pod
       labels:
-        app: mail-service-node
+        app: mail-service
     spec:
       containers:
-      - name: mail-service-node
+      - name: mail-service
         image: blusky10/mail-service
         imagePullPolicy: Always
         ports:
