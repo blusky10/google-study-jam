@@ -8,12 +8,13 @@ spec:
     app: mail-service
   template:
     metadata:
+      name: mail-node-pod
       labels:
         app: mail-service
     spec:
       containers:
       - name: mail-service
-        image: blusky10/mail-service
+        image: asia.gcr.io/coral-shoreline-209014/mail-service:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
