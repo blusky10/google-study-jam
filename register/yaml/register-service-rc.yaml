@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: register-service-rc
+  name: register-rc
 spec:
   replicas: 2
   selector:
-    app: register-service-node
+    app: register-app
   template:
     metadata:
-      name: register-service-node-pod
+      name: register-node
       labels:
-        app: register-service-node
+        app: register-app
     spec:
       containers:
-      - name: register-service-node
-        image: blusky10/register-service
+      - name: register-app
+        image: asia.gcr.io/coral-shoreline-209014/register-service:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

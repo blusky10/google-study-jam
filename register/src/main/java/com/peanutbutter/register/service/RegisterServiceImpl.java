@@ -69,7 +69,8 @@ public class RegisterServiceImpl implements RegisterService {
 
     private RequestObj trySendMail(User user)  {
 
-        final String requestURL = "http://localhost:8081/api/v1/mail";
+        String mailServiceUrl = environment.getProperty("mail.service.url");
+        String requestURL = mailServiceUrl + "/api/v1/mail";
 
         String ip = null;
         try {
