@@ -70,7 +70,9 @@ public class RegisterServiceImpl implements RegisterService {
     private RequestObj trySendMail(User user)  {
 
         String mailServiceUrl = environment.getProperty("mail.service.url");
-        String requestURL = mailServiceUrl + "/api/v1/mail";
+        final String requestURL = mailServiceUrl + "/api/v1/mail";
+
+        LOGGER.debug("[Register-Service] requestURL : " + requestURL);
 
         String ip = null;
         try {
