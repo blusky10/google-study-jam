@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mail-service-svc
+  name: mail-svc
 spec:
   selector:
-    app: mail-service
+    app: mail-app
   ports:
    - port: 80
      protocol: TCP
