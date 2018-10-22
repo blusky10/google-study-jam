@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface MailService {
 
-//    ResponseEntity<TryResponse> reserveMail(MailContent mailContent);
-
     void confirmMail(Long id);
 
     void sendMail(SendMail reservedMail);
