@@ -25,5 +25,3 @@ spec:
           value: "1"
         - name: KAFKA_CREATE_TOPICS
           value: mail-service:1:1
-        - name: KAFKA_MESSAGE_MAX_BYTES
-          value: "2000000000"
