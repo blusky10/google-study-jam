@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 @Service
@@ -68,21 +66,7 @@ public class RegisterServiceImpl implements RegisterService {
 
 
     private RequestObj trySendMail(User user)  {
-
-        String mailServiceUrl = environment.getProperty("mail.service.url");
-        final String requestURL = mailServiceUrl + "/api/v1/mail";
-
-        LOGGER.debug("[Register-Service] requestURL : " + requestURL);
-
-        String ip = null;
-        try {
-            ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        String port = environment.getProperty("server.port");
-        String appUrl = "http://" + ip + ":" + port;
+        String registerServiceUrl = environment.getProperty("register.service.url");
 
         Map<String, Object> body = new HashMap<>();
         body.put("type", "SIGNUP");
@@ -90,7 +74,12 @@ public class RegisterServiceImpl implements RegisterService {
         body.put("sender", "blusky10@naver.com");
         body.put("subject", "Registration Confirmation");
         body.put("contents", "To confirm your e-mail address, please click the link below:\n"
-                + appUrl + "/confirm?token=" + user.getToken());
+                + registerServiceUrl + "/confirm?token=" + user.getToken());
+
+        String mailServiceUrl = environment.getProperty("mail.service.url");
+        final String requestURL = mailServiceUrl + "/api/v1/mail";
+
+        LOGGER.debug("[Register-Service] requestURL : " + requestURL);
 
         return new RequestObj(requestURL, body);
     }
