@@ -2,8 +2,8 @@ package com.peanutbutter.mail.service;
 
 import com.peanutbutter.mail.dto.TryRequest;
 import com.peanutbutter.mail.dto.TryResponse;
-import com.peanutbutter.mail.entity.SendMail;
 import com.peanutbutter.mail.entity.ReservedResource;
+import com.peanutbutter.mail.entity.SendMail;
 import com.peanutbutter.mail.enums.Status;
 import com.peanutbutter.mail.kafka.KafkaServie;
 import com.peanutbutter.mail.repository.MailRepository;
@@ -56,46 +56,10 @@ public class MailServiceImpl implements MailService {
         return new ResponseEntity<>(tryResponse, HttpStatus.CREATED);
     }
 
-//    @Override
-//    public ResponseEntity<TryResponse> reserveMail(MailContent mailContent) {
-//        LOGGER.debug("SendMail : " + mailContent.toString());
-//
-//        SendMail reservedMail = mailRepository.save(new SendMail(mailContent));
-//
-//        LOGGER.debug("responseObj : " + reservedMail.toString());
-//
-//        TryResponse responseObj = buildResponseURI(reservedMail.getId(), reservedMail.getCreateTimeAt());
-//
-//        return new ResponseEntity<>(responseObj, HttpStatus.CREATED);
-//    }
-
     private TryResponse buildResponseURI(final Long id, final LocalDateTime created) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
         return new TryResponse(location, created);
     }
-
-//    @Override
-//    public void confirmMail(Long id) {
-//
-//        Optional<SendMail> optionalReservedMail = mailRepository.findById(id);
-//
-//        optionalReservedMail.orElseThrow(() -> new IllegalArgumentException("Not found"));
-//
-//        optionalReservedMail.ifPresent( reservedMail -> {
-//            reservedMail.validate();
-//
-//            reservedMail.setStatus(Status.CONFIRMED);
-//
-//            LOGGER.info("Confirm Mail :" + id);
-//
-//            mailRepository.save(reservedMail);
-//
-//            LOGGER.info("Publish to Kafka Confirmed Mail :" + reservedMail.toString());
-//            kafkaServie.publish(reservedMail);
-//
-//        });
-//    }
-
 
     @Override
     public void confirmMail(Long id) {

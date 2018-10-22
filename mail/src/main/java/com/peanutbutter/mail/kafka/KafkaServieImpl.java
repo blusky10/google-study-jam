@@ -1,8 +1,7 @@
 package com.peanutbutter.mail.kafka;
 
-import com.peanutbutter.mail.entity.SendMail;
 import com.peanutbutter.mail.entity.ReservedResource;
-import com.peanutbutter.mail.enums.Status;
+import com.peanutbutter.mail.entity.SendMail;
 import com.peanutbutter.mail.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +25,6 @@ public class KafkaServieImpl implements KafkaServie {
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-
-//    @Override
-//    public void publish(SendMail reservedMail) {
-//        this.kafkaTemplate.send(TOPIC, reservedMail);
-//    }
 
     @Override
     public void publish(String message) {
