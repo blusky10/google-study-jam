@@ -108,7 +108,7 @@ public class MailServiceImpl implements MailService {
             resource.validate();
             resource.setStatus(Status.CONFIRMED);
 
-            LOGGER.info("[Mail-Service] Confirm Mail :" + id);
+            LOGGER.info("[Mail-Service] Confirm Mail :" + resource.getId());
 
             reservedResourceRepository.save(resource);
 
@@ -129,7 +129,7 @@ public class MailServiceImpl implements MailService {
 
         LOGGER.info("[Mail-Service] Send Mail " + registrationEmail.toString());
 
-        //mailSender.send(registrationEmail);
+        mailSender.send(registrationEmail);
 
         mailRepository.save(sendMail);
     }

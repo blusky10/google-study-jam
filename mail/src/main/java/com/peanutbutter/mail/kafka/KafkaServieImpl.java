@@ -34,6 +34,7 @@ public class KafkaServieImpl implements KafkaServie {
 
     @Override
     public void publish(String message) {
+        LOGGER.info("[Mail-Service] Message send : " + message);
         this.kafkaTemplate.send(TOPIC, message);
     }
 
