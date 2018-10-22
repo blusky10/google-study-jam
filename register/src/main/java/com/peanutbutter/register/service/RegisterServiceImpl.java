@@ -31,7 +31,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         Optional<User> userExists = userRepository.findByEmail(user.getEmail());
 
-        LOGGER.debug("[Register-Service] userExists : " + userExists);
+        LOGGER.info("[Register-Service] userExists : " + userExists);
 
         if (userExists.isPresent()) {
             return null;
@@ -79,7 +79,7 @@ public class RegisterServiceImpl implements RegisterService {
         String mailServiceUrl = environment.getProperty("mail.service.url");
         final String requestURL = mailServiceUrl + "/api/v1/mail";
 
-        LOGGER.debug("[Register-Service] requestURL : " + requestURL);
+        LOGGER.info("[Register-Service] requestURL : " + requestURL);
 
         return new RequestObj(requestURL, body);
     }
