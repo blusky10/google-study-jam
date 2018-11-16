@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: mail-service-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /mail
+        backend:
+          serviceName: mail-service-service
+          servicePort: 8080
