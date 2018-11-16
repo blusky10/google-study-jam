@@ -8,11 +8,11 @@ spec:
   template:
     metadata:
       labels:
-        app: register-service
+        app: register-app
     spec:
       containers:
-      - name: register-service
-        image: blusky10/mail-service
+      - name: register-app
+        image: asia.gcr.io/coral-shoreline-209014/register-service:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
