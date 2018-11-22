@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: register-service-deployment
 spec:
-  replicas: 1
+  replicas: 2
   minReadySeconds: 5
   template:
     metadata:
@@ -16,3 +16,14 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        env:
+        - name: register.service.url
+          valueFrom:
+            configMapKeyRef:
+              name: register-config-map
+              key: REGISTER_SERVICE_URL
+        - name: mail.service.url
+          valueFrom:
+            configMapKeyRef:
+              name: register-config-map
+              key: MAIL_SERVICE_URL
