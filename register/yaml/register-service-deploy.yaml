@@ -23,10 +23,10 @@ spec:
         - name: register.service.url
           valueFrom:
             configMapKeyRef:
-              name: register-config-map
+              name: register-service-configmap
               key: REGISTER_SERVICE_URL
         - name: mail.service.url
           valueFrom:
             configMapKeyRef:
-              name: register-config-map
+              name: register-service-configmap
               key: MAIL_SERVICE_URL
